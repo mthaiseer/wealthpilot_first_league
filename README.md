@@ -22,6 +22,7 @@ Requirement is very simple. User need to create schedule / game plan for given t
 ## Assumption 
 1. security is out-of-scope
 2. No requirement for database connection, as use case create a game plan 
+3. Docker containarization will add on demand 
 
 ## Implementation consideration 
 1. **Round-robin scheduling** method used in this code, as all team need to play each other once 
@@ -31,3 +32,18 @@ Requirement is very simple. User need to create schedule / game plan for given t
 2. Java 11 
 3. lombok 
 4. JUnit 
+
+### Test coverage report 
+![img_2.png](img_2.png)
+
+### API 
+1. Schedule single matches very Saturday
+   - End point : http://localhost:8080/api/v1/league/plan/single
+   - Type : POST 
+   - Screenshot 
+   ![img_3.png](img_3.png)
+2. Schedule maximum matches very Saturday
+   - End point : http://localhost:8080/api/v1/league/plan/multiple
+   - Type : POST
+   - Screenshot 
+   ![img_4.png](img_4.png)

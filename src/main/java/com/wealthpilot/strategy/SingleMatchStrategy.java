@@ -14,6 +14,7 @@ public class SingleMatchStrategy {
 
     @Autowired
     private RoundRobinGameSchedulerAlgorithm gameSchedulerAlgorithm;
+
     public  List<Match> generateMatches(League league) throws GameScheduleException {
         gameSchedulerAlgorithm.createGamePlans(league, true);
         return gameSchedulerAlgorithm.getFinalSchedule();

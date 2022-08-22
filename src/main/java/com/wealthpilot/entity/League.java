@@ -1,8 +1,6 @@
 package com.wealthpilot.entity;
 
 import lombok.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class MultilpleMatchStrategy {
+public class MultipleMatchStrategy {
 
     @Autowired
     private RoundRobinGameSchedulerAlgorithm gameSchedulerAlgorithm;

@@ -4,7 +4,6 @@ import com.wealthpilot.entity.League;
 import com.wealthpilot.entity.Match;
 import com.wealthpilot.entity.Team;
 import com.wealthpilot.exception.GameScheduleException;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
@@ -12,6 +11,9 @@ import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.wealthpilot.constant.GameMessages.INVALID_REQUEST_RECEIVED;
+import static com.wealthpilot.constant.GameMessages.NUMBER_OF_LEGS;
 
 
 /**
@@ -24,13 +26,10 @@ import java.util.List;
 @Service
 public class RoundRobinGameSchedulerAlgorithm implements GameSchedulerAlgorithm {
 
-    public static final String INVALID_REQUEST_RECEIVED = "Invalid request received";
+
     private League league;
-
     private  int skipWeekByOne = 1;
-    private static int NUMBER_OF_LEGS = 2;
-
-    LocalDate firstDateOfTheMonth = null;
+    LocalDate localDate = null;
 
     private List<Match> matches = null;
 
@@ -42,24 +41,41 @@ public class RoundRobinGameSchedulerAlgorithm implements GameSchedulerAlgorithm 
     @Override
     public void  createGamePlans(League league, boolean isSingleMatchPerDay) throws GameScheduleException {
 
-        if(league == null || league.getTeams()  == null ){
-            throw new GameScheduleException(INVALID_REQUEST_RECEIVED);
-        }
-
+        validateRequest(league);
         List<Team> teams = league.getTeams();
         int teamSize = teams.size();
         addEmptyTeamNeeded(teams, teamSize);
         int rounds = teams.size()-1;
-
         matches = new ArrayList<>();
-        firstDateOfTheMonth = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
+        localDate = LocalDate.now().with(TemporalAdjusters.firstDayOfMonth());
+        createSchedulePerLeg(isSingleMatchPerDay, teams, rounds);
+    }
 
+    /**
+     *
+     * @param isSingleMatchPerDay
+     * @param teams
+     * @param rounds
+     */
+    private void createSchedulePerLeg(boolean isSingleMatchPerDay, List<Team> teams, int rounds) {
         for(int leg =0; leg < NUMBER_OF_LEGS; leg++){
-            for(int round=1; round<=rounds; round++){
+            for(int round = 1; round<= rounds; round++){
                 createOneRound(isSingleMatchPerDay, leg , round, teams);
                 rotateLastTeam(teams);
             }
-            firstDateOfTheMonth =   firstDateOfTheMonth.plusWeeks(3);
+            //Add 3 week gap after each leg
+            localDate =   localDate.plusWeeks(3);
+        }
+    }
+
+    /**
+     *
+     * @param league
+     * @throws GameScheduleException
+     */
+    private void validateRequest(League league) throws GameScheduleException {
+        if(league == null || league.getTeams()  == null ){
+            throw new GameScheduleException(INVALID_REQUEST_RECEIVED);
         }
     }
 
@@ -96,6 +112,7 @@ public class RoundRobinGameSchedulerAlgorithm implements GameSchedulerAlgorithm 
             if(isTeamContainsDummyTeam(firstGroup, secondGroup, count)){
                 continue;
             }
+            /**Swap teams in alternative legs as per requirements **/
             if(isTeamSwappingForAlternativeLeg(leg)){
                 createMatch(isOnePlay,
                         firstGroup.get(count).getName(),
@@ -178,7 +195,7 @@ public class RoundRobinGameSchedulerAlgorithm implements GameSchedulerAlgorithm 
      */
     private  String getNextSunday(int changeWeek){
 
-        LocalDate   nextSaturday =   firstDateOfTheMonth
+        LocalDate   nextSaturday =   localDate
                 .plusWeeks(changeWeek)
                 .with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
         return nextSaturday.toString();

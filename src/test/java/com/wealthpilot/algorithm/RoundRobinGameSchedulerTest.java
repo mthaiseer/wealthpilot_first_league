@@ -9,15 +9,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 public class RoundRobinGameSchedulerTest {
 
 
+    @Autowired
     private RoundRobinGameSchedulerAlgorithm roundRobinGameScheduler;
     Logger logger = LoggerFactory.getLogger(RoundRobinGameSchedulerTest.class);
 
@@ -27,22 +32,22 @@ public class RoundRobinGameSchedulerTest {
     @BeforeEach
     public void init() {
 
-        List<Team> teamList = new ArrayList<>();
-        teamList.add(Team.builder().name("A").build());
-        teamList.add(Team.builder().name("B").build());
-        teamList.add(Team.builder().name("C").build());
-       // teamList.add(Team.builder().name("D").build());
+        List<Team> teamsList = new ArrayList<>();
+        teamsList.add(Team.builder().name("A").build());
+        teamsList.add(Team.builder().name("B").build());
+        teamsList.add(Team.builder().name("C").build());
 
         league =  League.builder()
                 .league("My League")
                 .country("Germany")
-                .teams(teamList).build();
+                .teams(teamsList)
+                .build();
     }
 
     @Test
     public void testCreateSchedules() throws GameScheduleException {
 
-        roundRobinGameScheduler = new RoundRobinGameSchedulerAlgorithm();
+        //roundRobinGameScheduler = new RoundRobinGameSchedulerAlgorithm();
         roundRobinGameScheduler.createGamePlans(league, true);
         List<Match> schedules = roundRobinGameScheduler.getFinalSchedule();
         logger.debug(schedules.toString());
@@ -52,13 +57,10 @@ public class RoundRobinGameSchedulerTest {
 
         assertEquals("B", schedules.get(0).getFirstOpponent());
         assertEquals("C", schedules.get(0).getSecondOpponent());
-
         assertEquals("A", schedules.get(1).getFirstOpponent());
         assertEquals("C", schedules.get(1).getSecondOpponent());
-
         assertEquals("A", schedules.get(2).getFirstOpponent());
         assertEquals("B", schedules.get(2).getSecondOpponent());
-
         assertEquals(6, schedules.size());
 
 
