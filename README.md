@@ -37,12 +37,12 @@ Requirement is very simple. User need to create schedule / game plan for given t
 ![img_2.png](img_2.png)
 
 ### API 
-1. Schedule single matches very Saturday
+1. Schedule single matches very Saturday with 3 week gap between each leg 
    - End point : http://localhost:8080/api/v1/league/plan/single
    - Type : POST 
    - Screenshot 
    ![img_3.png](img_3.png)
-2. Schedule maximum matches very Saturday
+2. Schedule maximum matches very Saturday  with 3 week gap between each leg
    - End point : http://localhost:8080/api/v1/league/plan/multiple
    - Type : POST
    - Screenshot 
