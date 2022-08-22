@@ -25,7 +25,11 @@ Requirement is very simple. User need to create schedule / game plan for given t
 3. Docker containarization will add on demand 
 
 ## Implementation consideration 
-1. **Round-robin scheduling** method used in this code, as all team need to play each other once 
+1. **Round-robin scheduling** method used in this code, as all team need to play each other once
+2. Tests are covered 
+3. Global level exception used to capture application level errors
+4. Strategy pattern used to implement single / multiple matches on every Saturday 
+5. Builder pattern used widely
 
 ## Tools 
 1. Spring boot 
