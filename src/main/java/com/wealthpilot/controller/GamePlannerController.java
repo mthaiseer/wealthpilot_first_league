@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+/**
+ * @Author Mohamed Thaiseer
+ * @Description Controller class accept game request and pass to service for further process
+ */
 @RestController
 @RequestMapping("/api/v1/league")
 public class GamePlannerController {
